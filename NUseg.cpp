@@ -18,10 +18,11 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <list>
 
-std::list<std::list<int>> run(std::list<int> weights);
+std::list<std::list<int>> run(std::list<float> weights);
 
 int main()
 {
@@ -34,13 +35,27 @@ int main()
         std::cin >> epochs;
         if (epochs < 1) std::cout << "[NUseg] [ERROR] : Inappropriate value!" << std::endl;
     }
+    std::cout << std::endl;
 
     std::cout << "[NUseg] : Allocating memory for each of the datasets as doubly linked lists (starting empty)" << std::endl;
     std::list<std::list<int>> train; // A doubly-linked list of doubly linked lists (after loading the images the internal linked list should be of size 1105920 for each pixel brightnesss in a 1024x1080 image)
     std::list<std::list<int>> truth;
 
     std::cout << "[NUseg] : Loading the model from weights.dat" << std::endl;
-    std::list<int> model;
+    std::list<float> model;
+    
+    std::ifstream weightsFile{"weights.dat"};
+    if (!weightsFile) std::cout << "[NUseg] [404 - ERROR] : The file weights.dat does not exist!" << std::endl;
+
+    while (weightsFile)
+    {
+        float weight;
+        weightsFile >> weight;
+        model.emplace_back(weight);
+        std::cout << weight << std::endl;
+    }
+
+
     //TODO Load model and weights w/ error message if the file does not exist
 
     std::cout << "[NUseg] : Running the loaded model through " << epochs << " epochs!" << std::endl;
@@ -66,7 +81,7 @@ int main()
     return 0;
 }
 
-std::list<std::list<int>> run(std::list<int> weights)
+std::list<std::list<int>> run(std::list<float> weights)
 {
     return std::list<std::list<int>>();
 }
